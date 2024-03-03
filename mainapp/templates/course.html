@@ -1,0 +1,78 @@
+{% extends "basepage.html" %}
+
+{% block title %}
+{% if not courses %}
+    Курсы
+{% elif lesson %}
+    {{ lesson.title }}
+{% else %}
+    {{ courses.title }}
+{% endif %}
+{% endblock %}
+
+{% block content%}
+
+
+{% if not courses %}
+    <h1> Курсы </h1>
+    {% if courses_li %}
+        <ol>
+        {% for course in courses_li %}
+            <li>
+                <a href="{{ course.get_absolute_url }}">{{ course.title }}</a>
+                <br>Стоимость курса: {{ course.get_price }}
+                <br>Дата начала занятий: {{ course.time_start }}
+            </li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+{% else %}
+        <h2><a href="{{ courses.get_absolute_url }}">{{ courses.title }}</a></h2>
+    {% if not lesson %}
+
+        {% if join %}
+            <a href="{{ courses.get_absolute_url }}/join">Присоедениться</a>
+        {% endif %}
+
+        {% if not create %}
+            <h3>Автор: {{ courses.author }} | Дата: {{ courses.time_create }}</h3>
+            <p>{{ courses.content }}</p>
+        {% endif %}
+
+        {% if user.pk == courses.author_id and not create %}
+            <a href="{{ courses.get_absolute_url }}/create_lesson">Создать урок</a>
+        {% elif user.pk == courses.author_id and create  %}
+            <h2>Создать урок</h2>
+            <form method="post">
+            <input type="hidden" name="next" value="{{ next }}" />
+            <h1 class="messages">{{ form.non_field_errors }}</h1>
+            {% for f in form %}
+                 <p>
+                    <label for="{{ f.id_for_label }}">{{ f.label }}:</label>
+                    <br>
+                    {{ f }}
+                    <h1 class="messages">{{ f.errors }}</h1>
+                 </p>
+            {% endfor %}
+            <button type="submit">Создать урок</button>
+            {% csrf_token %}
+            </form>
+        {% endif %}
+
+        {% if lessons %}
+            <ol>
+            {% for lesson in lessons %}
+                <li><a href="{{ courses.get_absolute_url }}/{{ lesson.lesson_num }}">{{ lesson.title }}</a></li>
+            {% endfor %}
+            </ol>
+        {% endif %}
+    {% elif lesson %}
+
+        <h2>{{ lesson.title }}</h2>
+        <h3>Автор: {{ lesson.author }} | Дата: {{ lesson.time_create }}</h3>
+        <p>{{ lesson.content }}</p>
+        <p><a href="{{ lesson.video }}">{{ lesson.video}}</a></p>
+    {% endif %}
+{% endif %}
+
+{% endblock%}

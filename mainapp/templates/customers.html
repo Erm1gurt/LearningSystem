@@ -1,0 +1,67 @@
+{% extends "basepage.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content%}
+
+{% if not user_info %}
+<h1> {{ title }} </h1>
+<table style="border: solid">
+    <tr>
+        <th>
+            №
+        </th>
+        <th>
+            Имя
+        </th>
+        <th>
+            Фамилия
+        </th>
+        <th>
+            Электронная почта
+        </th>
+        <th>
+            Номер телефона
+        </th>
+        <th>
+            Необходимый курс
+        </th>
+    </tr>
+    {% for customer in customers %}
+    <tr>
+        <th>
+            {{ customer.pk }}
+        </th>
+        <th>
+            <a href="{{ customer.get_absolute_url}}">{{ customer.first_name }}</a>
+        </th>
+        <th>
+            {{ customer.last_name }}
+        </th>
+        <th>
+            {{ customer.email }}
+        </th>
+        <th>
+            {{ customer.phone_number }}
+        </th>
+        <th>
+            {{ customer.course }}
+        </th>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+
+    <p>Имя: {{ user_info.first_name }}</p>
+    <p>Фамилия: {{ user_info.last_name }}</p>
+    <p>Электронная почта: {{ user_info.email }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Добавить пользователя в группу</button>
+    </form>
+
+{% endif %}
+
+
+{% endblock%}

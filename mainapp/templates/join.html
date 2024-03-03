@@ -1,0 +1,30 @@
+{% extends "basepage.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content%}
+<h1> {{ title }} </h1>
+
+<p>Здравствуйте, {{ user.first_name }} {{ user.last_name }}!</p>
+
+{% if form %}
+<form method="post">
+    <input type="hidden" name="next" value="{{ next }}" />
+    <h1 class="messages">{{ form.non_field_errors }}</h1>
+    {% for f in form %}
+        <p>
+            <label for="{{ f.id_for_label }}">{{ f.label }}:</label>
+            <br>
+            {{ f }}
+            <h1 class="messages">{{ f.errors }}</h1>
+        </p>
+    {% endfor %}
+    <button type="submit">Оставить заявку</button>
+    {% csrf_token %}
+</form>
+{% else %}
+<p>Вы присоеденились к курсу!</p>
+<a href="{{ courses.get_absolute_url }}">Начать учиться</a>
+{% endif %}
+
+{% endblock %}

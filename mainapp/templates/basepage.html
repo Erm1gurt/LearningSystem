@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <style>
+        a {font-size: 120%}
+
+        .active {
+            color: green;
+            background-color: blue;
+            border: 3px solid blue;
+            border-radius: 8px;
+        }
+
+        body {
+            background-color: LightSkyBlue
+            }
+
+        .box div {
+            width: 30%;
+            display:inline-block;
+            }
+
+        .button {
+            margin-left: 10px;
+            }
+
+        .container {
+            overflow:hidden;
+            background-color: DeepSkyBlue;
+            }
+        .messages {
+            color:red;
+            font-size:110%;
+            }
+        .menu_bar {
+            background-color: DeepSkyBlue;
+            }
+        .ul_top_hypers li{
+            display: inline;
+            }
+        .username {
+            font-size: 120%;
+            color: DarkMagenta
+            }
+    </style>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div class="container">
+    <div class="box">
+        <div class="menu_bar">
+            <ul class="ul_top_hypers">
+                <li class="button">
+                    <a class="{% if page == '/home' %} active {% endif %}" href="{% url 'home' %}">Главная</a>
+                </li>
+                <li class="button">
+                    <a class="{% if page == '/course' %} active {% endif %}" href="{% url 'course' %}">Курсы</a>
+                </li>
+                {% if user.is_teacher %}
+                <li class="button">
+                    <a class="{% if page == '/add_course' %} active {% endif %}" href="{% url 'add_course' %}">Создать курс</a>
+                </li>
+                {% endif %}
+                {% if user.is_staff %}
+                <li class="button">
+                    <a class="{% if page == '/customers' %} active {% endif %}" href="{% url 'customers' %}">Клиенты</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="menu_bar">
+            <ul class="ul_top_hypers">
+                {% if not user.is_authenticated %}
+                <li class="button">
+                    <a class="{% if page == '/login' %} active {% endif %}" href="{% url 'login' %}">Войти</a>
+                </li>
+                <li class="button">
+                    <a class="{% if page == '/register' %} active {% endif %}" href="{% url 'register' %}">Зарегистрироваться</a>
+                </li>
+                {% else %}
+                <li class="username">
+                    {{ user.username }}
+                </li>
+                <li class="button">
+                    <a href="{% url 'logout' %}">Выйти</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% block content%}
+
+{% endblock %}
+</body>
+</html>
